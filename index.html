@@ -1,889 +1,538 @@
 <!DOCTYPE html>
-
 <html lang="vi">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Bảng Giá Vàng - DNTN Hiệu Vàng Kim Xuân II</title>
-
-    <style>
-
-        * { box-sizing: border-box; }
-
-        body {
-
-            font-family: Arial, sans-serif;
-
-            background-color: #000;
-
-            color: #fff;
-
-            margin: 0;
-
-            padding: 0;
-
-            overflow-x: hidden;
-
-        }
-
-
-
-        /* Khung điều khiển */
-
-        .admin-panel {
-
-            background-color: #1a1a1a;
-
-            padding: 15px 20px;
-
-            border-bottom: 3px solid #ffd700;
-
-            display: block;
-
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-
-        }
-
-        .admin-panel h3 { 
-
-            margin-top: 0; 
-
-            margin-bottom: 12px;
-
-            color: #ffd700; 
-
-            font-size: 18px;
-
-            text-transform: uppercase;
-
-            letter-spacing: 1px;
-
-        }
-
-        .admin-section-title {
-
-            color: #fff;
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-            margin: 10px 0 5px 0;
-
-            border-bottom: 1px solid #444;
-
-            padding-bottom: 3px;
-
-        }
-
-        .admin-grid {
-
-            display: grid;
-
-            grid-template-columns: repeat(4, 1fr);
-
-            gap: 12px;
-
-            margin-bottom: 12px;
-
-        }
-
-        .admin-grid label { display: block; font-size: 13px; margin-bottom: 4px; color: #ccc; }
-
-        .admin-grid input {
-
-            width: 100%;
-
-            padding: 8px 10px;
-
-            border-radius: 4px;
-
-            border: 1px solid #444;
-
-            background-color: #2b2b2b;
-
-            color: #fff;
-
-            font-size: 15px;
-
-        }
-
-        .admin-grid input:focus {
-
-            outline: none;
-
-            border-color: #ffd700;
-
-        }
-
-        .admin-actions {
-
-            display: flex;
-
-            gap: 10px;
-
-            align-items: center;
-
-        }
-
-        .admin-btn {
-
-            background-color: #ffd700;
-
-            color: #000;
-
-            border: none;
-
-            padding: 10px 24px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            border-radius: 4px;
-
-            font-size: 15px;
-
-            transition: all 0.2s;
-
-        }
-
-        .admin-btn:hover {
-
-            background-color: #ffae00;
-
-        }
-
-        .toggle-btn {
-
-            position: fixed;
-
-            top: 10px;
-
-            right: 10px;
-
-            background: rgba(0, 0, 0, 0.6);
-
-            color: #ffd700;
-
-            border: 1px solid #ffd700;
-
-            padding: 6px 14px;
-
-            cursor: pointer;
-
-            z-index: 999;
-
-            border-radius: 4px;
-
-            font-weight: bold;
-
-            font-size: 13px;
-
-            backdrop-filter: blur(4px);
-
-        }
-
-        .toggle-btn:hover {
-
-            background: #ffd700;
-
-            color: #000;
-
-        }
-
-
-
-        /* Layout Màn hình chính TV */
-
-        .tv-container {
-
-            display: flex;
-
-            flex-direction: column;
-
-            min-height: 100vh;
-
-        }
-
-
-
-        .header {
-
-            background-color: #000;
-
-            color: #ffd700;
-
-            text-align: center;
-
-            padding: 20px 10px 15px 10px;
-
-        }
-
-        .header h2 { 
-
-            margin: 0; 
-
-            font-size: 28px; 
-
-            color: #fff; 
-
-            letter-spacing: 2px;
-
-            font-weight: normal;
-
-        }
-
-        .header h1 { 
-
-            margin: 5px 0 0 0; 
-
-            font-size: 56px; 
-
-            text-transform: uppercase; 
-
-            letter-spacing: 3px;
-
-            color: #ffd700;
-
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-
-            transition: font-size 0.2s ease;
-
-        }
-
-        
-
-        .sub-header {
-
-            background-color: #ffd700;
-
-            color: #b30000;
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            padding: 12px 30px;
-
-            font-weight: bold;
-
-            font-size: 22px;
-
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-
-        }
-
-        .date-time {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
-
-        }
-
-        .date-time span {
-
-            background-color: #fff;
-
-            color: #000;
-
-            padding: 3px 12px;
-
-            border-radius: 4px;
-
-            font-family: 'Courier New', Courier, monospace;
-
-            font-weight: bold;
-
-        }
-
-
-
-        .content {
-
-            flex: 1;
-
-            background-color: #cc0000;
-
-            display: flex;
-
-        }
-
-        
-
-        table {
-
-            width: 100%;
-
-            border-collapse: collapse;
-
-            text-align: center;
-
-        }
-
-        th {
-
-            background-color: #a00000;
-
-            color: #ffd700;
-
-            font-size: 28px;
-
-            padding: 20px;
-
-            border-bottom: 3px solid #700000;
-
-            text-transform: uppercase;
-
-            letter-spacing: 1px;
-
-        }
-
-        td {
-
-            padding: 28px 20px;
-
-            font-size: 46px;
-
-            font-weight: bold;
-
-            border-bottom: 2px solid #990000;
-
-        }
-
-        tr:last-child td {
-
-            border-bottom: none;
-
-        }
-
-        .gold-type { 
-
-            color: #fff; 
-
-            text-align: left; 
-
-            padding-left: 40px; 
-
-            width: 34%;
-
-        }
-
-        .price-buy { 
-
-            color: #ffff00; 
-
-            width: 33%;
-
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-
-        }
-
-        .price-sell { 
-
-            color: #ffffff; 
-
-            width: 33%;
-
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-
-        }
-
-
-
-        .footer {
-
-            background-color: #ffd700;
-
-            color: #b30000;
-
-            text-align: center;
-
-            padding: 12px;
-
-            font-weight: bold;
-
-            font-size: 22px;
-
-            letter-spacing: 1px;
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bảng Giá Vàng - DNTN Hiệu Vàng Kim Xuân II</title>
+<style>
+* { box-sizing: border-box; }
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: #000;
+color: #fff;
+margin: 0;
+padding: 0;
+overflow-x: hidden;
+}
+
+/* KHUNG ĐIỀU KHIỂN (ADMIN PANEL) */
+.admin-panel {
+background-color: #1a1a1a;
+padding: 20px;
+border-bottom: 3px solid #ffd700;
+display: block;
+box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+max-height: 90vh;
+overflow-y: auto;
+}
+.admin-panel h3 {
+margin-top: 0;
+margin-bottom: 15px;
+color: #ffd700;
+font-size: 20px;
+text-transform: uppercase;
+letter-spacing: 1px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.admin-section-title {
+color: #ffd700;
+font-size: 15px;
+font-weight: bold;
+margin: 15px 0 10px 0;
+border-bottom: 1px solid #444;
+padding-bottom: 5px;
+text-transform: uppercase;
+}
+.admin-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 12px;
+margin-bottom: 12px;
+}
+.admin-grid label { display: block; font-size: 13px; margin-bottom: 4px; color: #ccc; }
+.admin-grid input {
+width: 100%;
+padding: 8px 10px;
+border-radius: 4px;
+border: 1px solid #444;
+background-color: #2b2b2b;
+color: #fff;
+font-size: 15px;
+}
+.admin-grid input:focus {
+outline: none;
+border-color: #ffd700;
+background-color: #333;
+}
+
+/* Bảng quản lý danh sách vàng trong Admin */
+.admin-gold-table {
+width: 100%;
+border-collapse: collapse;
+margin-bottom: 15px;
+}
+.admin-gold-table th {
+background-color: #2a2a2a;
+color: #ddd;
+font-size: 13px;
+padding: 8px;
+text-align: left;
+border: 1px solid #444;
+}
+.admin-gold-table td {
+padding: 6px;
+border: 1px solid #444;
+background-color: #222;
+}
+.admin-gold-table input {
+width: 100%;
+padding: 6px 8px;
+border-radius: 3px;
+border: 1px solid #555;
+background-color: #111;
+color: #fff;
+font-size: 14px;
+}
+
+.btn-action {
+padding: 6px 12px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-weight: bold;
+font-size: 13px;
+transition: all 0.2s;
+}
+.btn-add { background-color: #28a745; color: #fff; }
+.btn-add:hover { background-color: #218838; }
+.btn-delete { background-color: #dc3545; color: #fff; }
+.btn-delete:hover { background-color: #c82333; }
+.btn-save {
+background-color: #ffd700;
+color: #000;
+padding: 12px 30px;
+font-size: 16px;
+width: 100%;
+margin-top: 10px;
+}
+.btn-save:hover { background-color: #ffae00; }
+
+.toggle-btn {
+position: fixed;
+top: 10px;
+right: 10px;
+background: rgba(0, 0, 0, 0.7);
+color: #ffd700;
+border: 1px solid #ffd700;
+padding: 8px 16px;
+cursor: pointer;
+z-index: 999;
+border-radius: 20px;
+font-weight: bold;
+font-size: 13px;
+backdrop-filter: blur(5px);
+box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.toggle-btn:hover { background: #ffd700; color: #000; }
+
+/* MÀN HÌNH DISPLAY TIVI */
+.tv-container {
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+
+.header {
+background-color: #000;
+color: #ffd700;
+text-align: center;
+padding: 15px 10px;
+}
+.header h2 {
+margin: 0;
+font-size: 26px;
+color: #fff;
+letter-spacing: 2px;
+font-weight: 300;
+}
+.header h1 {
+margin: 5px 0 0 0;
+font-size: 56px;
+text-transform: uppercase;
+letter-spacing: 3px;
+color: #ffd700;
+text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+transition: all 0.3s ease;
+}
+
+.sub-header {
+background-color: #ffd700;
+color: #b30000;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px 40px;
+font-weight: bold;
+font-size: 22px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+z-index: 2;
+}
+.date-time {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+.date-time span {
+background-color: #000;
+color: #ffd700;
+padding: 4px 14px;
+border-radius: 4px;
+font-family: 'Consolas', 'Courier New', monospace;
+font-weight: bold;
+letter-spacing: 1px;
+}
+
+.content {
+flex: 1;
+background: linear-gradient(180deg, #b30000 0%, #800000 100%);
+display: flex;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+text-align: center;
+}
+th {
+background-color: rgba(0, 0, 0, 0.3);
+color: #ffd700;
+font-size: 28px;
+padding: 16px;
+border-bottom: 3px solid #ffd700;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+}
+td {
+padding: 18px 15px;
+font-size: 40px;
+font-weight: bold;
+border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+transition: background-color 0.5s ease;
+}
+tr:hover td {
+background-color: rgba(255, 255, 255, 0.05);
+}
+.gold-type {
+color: #fff;
+text-align: left;
+padding-left: 50px;
+width: 36%;
+}
+.price-buy {
+color: #ffff00;
+width: 32%;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+}
+.price-sell {
+color: #ffffff;
+width: 32%;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+}
+
+/* Hiệu ứng nhấp nháy khi vừa cập nhật giá */
+.updated-flash {
+animation: flashAnim 1.5s ease-in-out;
+}
+@keyframes flashAnim {
+0% { background-color: rgba(255, 215, 0, 0.5); }
+100% { background-color: transparent; }
+}
+
+.footer {
+background-color: #ffd700;
+color: #b30000;
+padding: 10px 0;
+font-weight: bold;
+font-size: 22px;
+overflow: hidden;
+white-space: nowrap;
+}
+.marquee-text {
+display: inline-block;
+padding-left: 100%;
+animation: marquee 25s linear infinite;
+}
+@keyframes marquee {
+0% { transform: translate(0, 0); }
+100% { transform: translate(-100%, 0); }
+}
+</style>
 </head>
-
 <body>
 
-
-
-    <!-- Nút Ẩn/Hiện Bảng Điều Khiển -->
-
-    <button class="toggle-btn" onclick="toggleAdmin()" title="Nhấn ESC để ẩn/hiện nhanh">⚙️ Bảng Điều Khiển (ESC)</button>
-
-
-
-    <!-- BẢNG ĐIỀU KHIỂN SỬA GIÁ VÀ CẤU HÌNH -->
-
-    <div class="admin-panel" id="adminPanel">
-
-        <h3>CẬP NHẬT BẢNG GIÁ & CẤU HÌNH HIỂN THỊ</h3>
-
-        
-
-        <div class="admin-section-title">1. Điều chỉnh kích thước & màu sắc tên hiệu vàng</div>
-
-        <div class="admin-grid" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
-
-            <div>
-
-                <label>Tên hiệu vàng (Dòng lớn)</label>
-
-                <input type="text" id="in_title_text" value="KIM XUÂN II">
-
-            </div>
-
-            <div>
-
-                <label>Cỡ chữ Tên (px)</label>
-
-                <input type="number" id="in_title_size" value="56" min="20" max="120">
-
-            </div>
-
-            <div>
-
-                <label>Cỡ chữ Bảng giá (px)</label>
-
-                <input type="number" id="in_table_size" value="46" min="20" max="80">
-
-            </div>
-
-            <div>
-
-                <label>Màu chữ Tên</label>
-
-                <input type="color" id="in_title_color" value="#ffd700" style="padding: 2px; height: 37px;">
-
-            </div>
-
-        </div>
-
-
-
-        <div class="admin-section-title">2. Cập nhật giá vàng (Đồng/Chỉ)</div>
-
-        <div class="admin-grid">
-
-            <div>
-
-                <label>Vàng 9999 (Mua - Bán)</label>
-
-                <input type="text" id="in_9999_m" value="13,530,000">
-
-                <input type="text" id="in_9999_b" value="13,800,000" style="margin-top:5px;">
-
-            </div>
-
-            <div>
-
-                <label>Vàng 980 (Mua - Bán)</label>
-
-                <input type="text" id="in_980_m" value="13,150,000">
-
-                <input type="text" id="in_980_b" value="13,500,000" style="margin-top:5px;">
-
-            </div>
-
-            <div>
-
-                <label>Vàng 610 (Mua - Bán)</label>
-
-                <input type="text" id="in_610_m" value="8,220,000">
-
-                <input type="text" id="in_610_b" value="8,550,000" style="margin-top:5px;">
-
-            </div>
-
-        </div>
-
-
-
-        <div class="admin-actions">
-
-            <button class="admin-btn" id="btnUpdate" onclick="updatePrice()">LƯU & CẬP NHẬT MÀN HÌNH</button>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- MÀN HÌNH HIỂN THỊ CHIẾU TV -->
-
-    <div class="tv-container">
-
-        <div class="header">
-
-            <h2>DNTN HIỆU VÀNG</h2>
-
-            <h1 id="mainTitle">KIM XUÂN II</h1>
-
-        </div>
-
-
-
-        <div class="sub-header">
-
-            <div class="date-time">
-
-                NGÀY: <span id="currentDate">--/--/----</span>
-
-                &nbsp;&nbsp;
-
-                GIỜ: <span id="currentTime">--:--:--</span>
-
-            </div>
-
-            <div>Đơn vị: Đồng/Chỉ (VNĐ)</div>
-
-        </div>
-
-
-
-        <div class="content">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th style="text-align: left; padding-left: 40px;">LOẠI VÀNG</th>
-
-                        <th>MUA VÀO</th>
-
-                        <th>BÁN RA</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <tr>
-
-                        <td class="gold-type">Vàng 9999</td>
-
-                        <td class="price-buy" id="p_9999_m">13,530,000</td>
-
-                        <td class="price-sell" id="p_9999_b">13,800,000</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td class="gold-type">Vàng 980</td>
-
-                        <td class="price-buy" id="p_980_m">13,150,000</td>
-
-                        <td class="price-sell" id="p_980_b">13,500,000</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td class="gold-type">Vàng 610</td>
-
-                        <td class="price-buy" id="p_610_m">8,220,000</td>
-
-                        <td class="price-sell" id="p_610_b">8,550,000</td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-
-        <div class="footer">
-
-            XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH
-
-        </div>
-
-    </div>
-
-
-
-    <script>
-
-        const fields = ['9999_m', '9999_b', '980_m', '980_b', '610_m', '610_b'];
-
-
-
-        // Đồng hồ chạy liên tục thời gian thực (Real-time clock)
-
-        function startRealtimeClock() {
-
-            function updateClock() {
-
-                const now = new Date();
-
-                
-
-                // Định dạng Ngày
-
-                const day = String(now.getDate()).padStart(2, '0');
-
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-
-                const year = now.getFullYear();
-
-                document.getElementById('currentDate').innerText = `${day}/${month}/${year}`;
-
-
-
-                // Định dạng Giờ
-
-                const hours = String(now.getHours()).padStart(2, '0');
-
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-
-                document.getElementById('currentTime').innerText = `${hours}:${minutes}:${seconds}`;
-
-            }
-
-
-
-            updateClock();
-
-            setInterval(updateClock, 1000); // Cập nhật mỗi 1 giây
-
-        }
-
-
-
-        // Tải dữ liệu lưu trữ từ localStorage
-
-        function loadSavedData() {
-
-            // Giá vàng
-
-            fields.forEach(id => {
-
-                const savedValue = localStorage.getItem('gold_' + id);
-
-                if (savedValue) {
-
-                    document.getElementById('in_' + id).value = savedValue;
-
-                    document.getElementById('p_' + id).innerText = savedValue;
-
-                }
-
-            });
-
-
-
-            // Tiêu đề & Cỡ chữ
-
-            const savedTitleText = localStorage.getItem('gold_title_text');
-
-            if (savedTitleText) {
-
-                document.getElementById('in_title_text').value = savedTitleText;
-
-                document.getElementById('mainTitle').innerText = savedTitleText;
-
-            }
-
-
-
-            const savedTitleSize = localStorage.getItem('gold_title_size');
-
-            if (savedTitleSize) {
-
-                document.getElementById('in_title_size').value = savedTitleSize;
-
-                document.getElementById('mainTitle').style.fontSize = savedTitleSize + 'px';
-
-            }
-
-
-
-            const savedTitleColor = localStorage.getItem('gold_title_color');
-
-            if (savedTitleColor) {
-
-                document.getElementById('in_title_color').value = savedTitleColor;
-
-                document.getElementById('mainTitle').style.color = savedTitleColor;
-
-            }
-
-
-
-            const savedTableSize = localStorage.getItem('gold_table_size');
-
-            if (savedTableSize) {
-
-                document.getElementById('in_table_size').value = savedTableSize;
-
-                applyTableFontSize(savedTableSize);
-
-            }
-
-        }
-
-
-
-        // Áp dụng cỡ chữ cho bảng
-
-        function applyTableFontSize(sizePx) {
-
-            const cells = document.querySelectorAll('td');
-
-            cells.forEach(td => td.style.fontSize = sizePx + 'px');
-
-        }
-
-
-
-        // Cập nhật dữ liệu từ Bảng điều khiển
-
-        function updatePrice() {
-
-            // Cập nhật Giá
-
-            fields.forEach(id => {
-
-                const val = document.getElementById('in_' + id).value;
-
-                document.getElementById('p_' + id).innerText = val;
-
-                localStorage.setItem('gold_' + id, val);
-
-            });
-
-
-
-            // Cập nhật Tên hiệu vàng & Cỡ chữ
-
-            const titleText = document.getElementById('in_title_text').value;
-
-            const titleSize = document.getElementById('in_title_size').value;
-
-            const titleColor = document.getElementById('in_title_color').value;
-
-            const tableSize = document.getElementById('in_table_size').value;
-
-
-
-            const mainTitle = document.getElementById('mainTitle');
-
-            mainTitle.innerText = titleText;
-
-            mainTitle.style.fontSize = titleSize + 'px';
-
-            mainTitle.style.color = titleColor;
-
-
-
-            applyTableFontSize(tableSize);
-
-
-
-            // Lưu cài đặt
-
-            localStorage.setItem('gold_title_text', titleText);
-
-            localStorage.setItem('gold_title_size', titleSize);
-
-            localStorage.setItem('gold_title_color', titleColor);
-
-            localStorage.setItem('gold_table_size', tableSize);
-
-
-
-            // Phản hồi nút bấm
-
-            const btn = document.getElementById('btnUpdate');
-
-            btn.innerText = "ĐÃ LƯU & CẬP NHẬT!";
-
-            btn.style.backgroundColor = "#28a745";
-
-            btn.style.color = "#fff";
-
-            setTimeout(() => {
-
-                btn.innerText = "LƯU & CẬP NHẬT MÀN HÌNH";
-
-                btn.style.backgroundColor = "#ffd700";
-
-                btn.style.color = "#000";
-
-            }, 1500);
-
-        }
-
-
-
-        // Ẩn / Hiện Bảng Điều Khiển
-
-        function toggleAdmin() {
-
-            const panel = document.getElementById('adminPanel');
-
-            panel.style.display = (panel.style.display === "none") ? "block" : "none";
-
-        }
-
-
-
-        // Phím tắt ESC để bật/tắt admin panel
-
-        document.addEventListener('keydown', function(e) {
-
-            if (e.key === "Escape") {
-
-                toggleAdmin();
-
-            }
-
-        });
-
-
-
-        // Khởi chạy khi load trang
-
-        window.onload = function() {
-
-            loadSavedData();
-
-            startRealtimeClock();
-
-        };
-
-    </script>
-
-
-
+<!-- Nút Bật/Tắt Admin -->
+<button class="toggle-btn" onclick="toggleAdmin()">⚙️ Bảng Điều Khiển (ESC)</button>
+
+<!-- BẢNG ĐIỀU KHIỂN ADMIN -->
+<div class="admin-panel" id="adminPanel">
+<h3>
+<span>⚙️ CẬP NHẬT BẢNG GIÁ & CẤU HÌNH</span>
+<span style="font-size: 13px; color: #888; font-weight: normal;">(Nhấn ESC để ẩn)</span>
+</h3>
+
+<div class="admin-section-title">1. Cấu hình tiêu đề & Kích thước chữ</div>
+<div class="admin-grid" style="grid-template-columns: 2fr 1fr 1fr 1fr 2fr;">
+<div>
+<label>Tên hiệu vàng</label>
+<input type="text" id="in_title_text" value="KIM XUÂN II">
+</div>
+<div>
+<label>Cỡ Tên (px)</label>
+<input type="number" id="in_title_size" value="56" min="20" max="120">
+</div>
+<div>
+<label>Cỡ Giá (px)</label>
+<input type="number" id="in_table_size" value="40" min="20" max="80">
+</div>
+<div>
+<label>Màu Tên</label>
+<input type="color" id="in_title_color" value="#ffd700" style="padding: 2px; height: 37px;">
+</div>
+<div>
+<label>Đơn vị tính</label>
+<input type="text" id="in_unit_text" value="Đồng/Chỉ (VNĐ)">
+</div>
+</div>
+
+<div class="admin-section-title" style="display: flex; justify-content: space-between; align-items: center;">
+<span>2. Danh sách & Giá Vàng</span>
+<button class="btn-action btn-add" onclick="addGoldRow()">+ Thêm loại vàng</button>
+</div>
+
+<table class="admin-gold-table">
+<thead>
+<tr>
+<th style="width: 35%;">Tên Loại Vàng</th>
+<th style="width: 30%;">Giá Mua Vào</th>
+<th style="width: 30%;">Giá Bán Ra</th>
+<th style="width: 5%; text-align: center;">Xóa</th>
+</tr>
+</thead>
+<tbody id="adminGoldBody">
+<!-- Danh sách các dòng vàng sẽ được tải vào đây -->
+</tbody>
+</table>
+
+<div class="admin-section-title">3. Thông báo chạy ở chân màn hình (Footer Ticker)</div>
+<div style="margin-bottom: 15px;">
+<input type="text" id="in_footer_text" value="XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH - CHÚC QUÝ KHÁCH AN KHANG THỊNH VƯỢNG!" style="width: 100%; padding: 8px; background-color: #2b2b2b; color: #fff; border: 1px solid #444; border-radius: 4px;">
+</div>
+
+<button class="btn-action btn-save" id="btnUpdate" onclick="saveAllData()">💾 LƯU & CẬP NHẬT MÀN HÌNH TV</button>
+</div>
+
+<!-- MÀN HÌNH HIỂN THỊ TV -->
+<div class="tv-container">
+<div class="header">
+<h2>DNTN HIỆU VÀNG</h2>
+<h1 id="mainTitle">KIM XUÂN II</h1>
+</div>
+
+<div class="sub-header">
+<div class="date-time">
+NGÀY: <span id="currentDate">--/--/----</span>
+GIỜ: <span id="currentTime">--:--:--</span>
+</div>
+<div id="displayUnit">Đơn vị: Đồng/Chỉ (VNĐ)</div>
+</div>
+
+<div class="content">
+<table>
+<thead>
+<tr>
+<th style="text-align: left; padding-left: 50px;">LOẠI VÀNG</th>
+<th>MUA VÀO</th>
+<th>BÁN RA</th>
+</tr>
+</thead>
+<tbody id="displayGoldBody">
+<!-- Dữ liệu hiển thị bảng giá -->
+</tbody>
+</table>
+</div>
+
+<div class="footer">
+<div class="marquee-text" id="displayFooter">XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH</div>
+</div>
+</div>
+
+<script>
+// Dữ liệu mặc định ban đầu: Vàng 990 nằm ngay bên dưới Vàng 9999
+const defaultGoldData = [
+{ name: "Vàng 9999", buy: "13,530,000", sell: "13,800,000" },
+{ name: "Vàng 990", buy: "13,300,000", sell: "13,650,000" },
+{ name: "Vàng 980", buy: "13,150,000", sell: "13,500,000" },
+{ name: "Vàng 610", buy: "8,220,000", sell: "8,550,000" }
+];
+
+// Tự động định dạng số tiền (13300000 -> 13,300,000)
+function formatCurrencyInput(input) {
+let val = input.value.replace(/\D/g, '');
+if (val !== "") {
+input.value = Number(val).toLocaleString('en-US');
+} else {
+input.value = "";
+}
+}
+
+// Đồng hồ thời gian thực
+function startRealtimeClock() {
+function updateClock() {
+const now = new Date();
+const day = String(now.getDate()).padStart(2, '0');
+const month = String(now.getMonth() + 1).padStart(2, '0');
+const year = now.getFullYear();
+document.getElementById('currentDate').innerText = `${day}/${month}/${year}`;
+
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+document.getElementById('currentTime').innerText = `${hours}:${minutes}:${seconds}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+}
+
+// Tạo dòng chỉnh sửa trong Bảng Admin
+function renderAdminRow(name = '', buy = '', sell = '') {
+const tbody = document.getElementById('adminGoldBody');
+const tr = document.createElement('tr');
+tr.innerHTML = `
+<td><input type="text" class="g-name" value="${name}" placeholder="Tên loại vàng..."></td>
+<td><input type="text" class="g-buy" value="${buy}" placeholder="0" oninput="formatCurrencyInput(this)"></td>
+<td><input type="text" class="g-sell" value="${sell}" placeholder="0" oninput="formatCurrencyInput(this)"></td>
+<td style="text-align: center;">
+<button class="btn-action btn-delete" onclick="this.closest('tr').remove()">✕</button>
+</td>
+`;
+tbody.appendChild(tr);
+}
+
+function addGoldRow() {
+renderAdminRow();
+}
+
+// Tải dữ liệu từ localStorage
+function loadSavedData() {
+const savedTitleText = localStorage.getItem('gold_title_text') || "KIM XUÂN II";
+const savedTitleSize = localStorage.getItem('gold_title_size') || "56";
+const savedTitleColor = localStorage.getItem('gold_title_color') || "#ffd700";
+const savedTableSize = localStorage.getItem('gold_table_size') || "40";
+const savedUnitText = localStorage.getItem('gold_unit_text') || "Đồng/Chỉ (VNĐ)";
+const savedFooterText = localStorage.getItem('gold_footer_text') || "XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH - CHÚC QUÝ KHÁCH AN KHANG THỊNH VƯỢNG!";
+
+document.getElementById('in_title_text').value = savedTitleText;
+document.getElementById('in_title_size').value = savedTitleSize;
+document.getElementById('in_title_color').value = savedTitleColor;
+document.getElementById('in_table_size').value = savedTableSize;
+document.getElementById('in_unit_text').value = savedUnitText;
+document.getElementById('in_footer_text').value = savedFooterText;
+
+const savedGoldData = localStorage.getItem('gold_list_data');
+let list = savedGoldData ? JSON.parse(savedGoldData) : defaultGoldData;
+
+const adminTbody = document.getElementById('adminGoldBody');
+adminTbody.innerHTML = '';
+list.forEach(item => renderAdminRow(item.name, item.buy, item.sell));
+
+applyDataToTV(list);
+}
+
+// Cập nhật giao diện TV
+function applyDataToTV(goldList, isFlash = false) {
+const titleText = document.getElementById('in_title_text').value;
+const titleSize = document.getElementById('in_title_size').value;
+const titleColor = document.getElementById('in_title_color').value;
+const tableSize = document.getElementById('in_table_size').value;
+const unitText = document.getElementById('in_unit_text').value;
+const footerText = document.getElementById('in_footer_text').value;
+
+const mainTitle = document.getElementById('mainTitle');
+mainTitle.innerText = titleText;
+mainTitle.style.fontSize = titleSize + 'px';
+mainTitle.style.color = titleColor;
+
+document.getElementById('displayUnit').innerText = "Đơn vị: " + unitText;
+document.getElementById('displayFooter').innerText = footerText;
+
+const displayTbody = document.getElementById('displayGoldBody');
+displayTbody.innerHTML = '';
+
+goldList.forEach(item => {
+const tr = document.createElement('tr');
+if (isFlash) tr.classList.add('updated-flash');
+tr.innerHTML = `
+<td class="gold-type" style="font-size: ${tableSize}px;">${item.name}</td>
+<td class="price-buy" style="font-size: ${tableSize}px;">${item.buy || '0'}</td>
+<td class="price-sell" style="font-size: ${tableSize}px;">${item.sell || '0'}</td>
+`;
+displayTbody.appendChild(tr);
+});
+}
+
+// Lưu toàn bộ cài đặt
+function saveAllData() {
+const rows = document.querySelectorAll('#adminGoldBody tr');
+const goldList = [];
+rows.forEach(row => {
+const name = row.querySelector('.g-name').value.trim();
+const buy = row.querySelector('.g-buy').value.trim();
+const sell = row.querySelector('.g-sell').value.trim();
+if (name !== "") {
+goldList.push({ name, buy, sell });
+}
+});
+
+localStorage.setItem('gold_list_data', JSON.stringify(goldList));
+localStorage.setItem('gold_title_text', document.getElementById('in_title_text').value);
+localStorage.setItem('gold_title_size', document.getElementById('in_title_size').value);
+localStorage.setItem('gold_title_color', document.getElementById('in_title_color').value);
+localStorage.setItem('gold_table_size', document.getElementById('in_table_size').value);
+localStorage.setItem('gold_unit_text', document.getElementById('in_unit_text').value);
+localStorage.setItem('gold_footer_text', document.getElementById('in_footer_text').value);
+
+applyDataToTV(goldList, true);
+
+const btn = document.getElementById('btnUpdate');
+btn.innerText = "✓ ĐÃ LƯU VÀ CẬP NHẬT MÀN HÌNH!";
+btn.style.backgroundColor = "#28a745";
+btn.style.color = "#fff";
+setTimeout(() => {
+btn.innerText = "💾 LƯU & CẬP NHẬT MÀN HÌNH TV";
+btn.style.backgroundColor = "#ffd700";
+btn.style.color = "#000";
+}, 1500);
+}
+
+function toggleAdmin() {
+const panel = document.getElementById('adminPanel');
+panel.style.display = (panel.style.display === "none") ? "block" : "none";
+}
+
+document.addEventListener('keydown', function(e) {
+if (e.key === "Escape") {
+toggleAdmin();
+}
+});
+
+window.onload = function() {
+loadSavedData();
+startRealtimeClock();
+};
+</script>
 </body>
-
 </html>
+
+
